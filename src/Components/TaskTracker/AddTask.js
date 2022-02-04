@@ -1,6 +1,12 @@
 import React, { useState, useRef } from "react";
 import { db } from "../../Config/firebase-config";
-import { Form, Button, ButtonGroup, ToggleButton, Feedback } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  ButtonGroup,
+  ToggleButton,
+  Feedback,
+} from "react-bootstrap";
 
 const priorities = [
   {
@@ -45,8 +51,16 @@ export const AddTask = ({ handleAddTask }) => {
   return (
     <Form onSubmit={handleSubmit} style={formStyle}>
       <Form.Group>
-        <Form.Control type="text" placeholder="Task Name" ref={taskNameRef} maxLength={10} required />
-        <Form.Control.Feedback type="invalid">Please enter task name.</Form.Control.Feedback>
+        <Form.Control
+          type="text"
+          placeholder="Task Name"
+          ref={taskNameRef}
+          maxLength={50}
+          required
+        />
+        <Form.Control.Feedback type="invalid">
+          Please enter task name.
+        </Form.Control.Feedback>
       </Form.Group>
       <ButtonGroup>
         {priorities.map((prty, index) => (

@@ -34,7 +34,14 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
       case "updateTaskDetails":
         updatedTask = taskDetails.map((task) =>
           task.id === taskId
-            ? { ...task, ...{ task_name: taskNameRef.current.value, priority, completed: task.completed } }
+            ? {
+                ...task,
+                ...{
+                  task_name: taskNameRef.current.value,
+                  priority,
+                  completed: task.completed,
+                },
+              }
             : task
         );
         break;
@@ -58,7 +65,7 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
   };
 
   return (
-    <Table striped bordered hover style={{ margin: 0 }}>
+    <Table striped bordered hover style={{ marginTop: "20px" }}>
       <thead>
         <tr>
           <th>#</th>
@@ -75,15 +82,28 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => handleUpdateTaskDetails("updateTaskStatus", task.id)}
+                  onChange={() =>
+                    handleUpdateTaskDetails("updateTaskStatus", task.id)
+                  }
                   disabled={selectedTaskIdToEdit === task.id}
                 />
               </td>
               <td>
                 {selectedTaskIdToEdit === task.id ? (
-                  <input type="text" defaultValue={task.task_name} ref={taskNameRef} style={{ width: "100%" }} />
+                  <input
+                    type="text"
+                    defaultValue={task.task_name}
+                    ref={taskNameRef}
+                    style={{ width: "100%" }}
+                  />
                 ) : (
-                  <label style={{ textDecoration: task.completed ? "line-through" : "none" }}>{task.task_name}</label>
+                  <label
+                    style={{
+                      textDecoration: task.completed ? "line-through" : "none",
+                    }}
+                  >
+                    {task.task_name}
+                  </label>
                 )}
               </td>
               <td align="center">
@@ -99,7 +119,11 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
               </td>
               <td align="center">
                 {selectedTaskIdToEdit === task.id ? (
-                  <BiCheck onClick={() => handleUpdateTaskDetails("updateTaskDetails", task.id)} />
+                  <BiCheck
+                    onClick={() =>
+                      handleUpdateTaskDetails("updateTaskDetails", task.id)
+                    }
+                  />
                 ) : (
                   <>
                     <BiEdit onClick={() => setSelectedTaskIdToEdit(task.id)} />

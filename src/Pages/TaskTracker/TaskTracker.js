@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../Config/firebase-config";
 import { collection, getDocs, addDoc, firebase } from "firebase/firestore";
 import { v4 as uuid4 } from "uuid";
+import Collapse from "react-bootstrap/Collapse";
+
 import { Header, AddTask, TaskList } from "../../Components";
 import "./TaskTracker.css";
 
@@ -10,7 +12,8 @@ const taskDetailsRef = collection(db, "Tasks");
 export const TaskTracker = () => {
   const [taskDetails, setTaskDetails] = useState([]);
   const [showAddTask, setShowAddTask] = useState(false);
-  const handleTaskDetails = (updatedTaskDetails) => setTaskDetails(updatedTaskDetails);
+  const handleTaskDetails = (updatedTaskDetails) =>
+    setTaskDetails(updatedTaskDetails);
   const handleShowAddTask = () => setShowAddTask(!showAddTask);
 
   const handleAddTask = async (taskNameRef, priority) => {
@@ -21,7 +24,6 @@ export const TaskTracker = () => {
       priority: priority.name,
       created_date: new Date(),
     };
-    debugger;
     await addDoc(taskDetailsRef, newTaskDetails);
     setTaskDetails([...taskDetails, newTaskDetails]);
     setShowAddTask(false);
@@ -41,8 +43,15 @@ export const TaskTracker = () => {
   return (
     <div className="Container">
       <Header handleShowAddTask={handleShowAddTask} />
-      {showAddTask && <AddTask handleAddTask={handleAddTask} />}
-      <TaskList taskDetails={taskDetails} handleTaskDetails={handleTaskDetails} />
+      <Collapse in={showAddTask} style={{ width: "100%" }}>
+        <div>
+          <AddTask handleAddTask={handleAddTask} />
+        </div>
+      </Collapse>
+      <TaskList
+        taskDetails={taskDetails}
+        handleTaskDetails={handleTaskDetails}
+      />
     </div>
   );
 };
