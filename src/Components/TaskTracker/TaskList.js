@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { db } from "../../Config/firebase-config";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { Table, DropdownButton, Dropdown } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { BiEdit, BiCheck } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
+import { EmptyList } from "./EmptyList";
 
+const disableCtrlStyle = {
+  opacity: "0.5",
+  pointerEvents: "none",
+};
 export const TaskList = ({ taskDetails, handleTaskDetails }) => {
   const [priority, setPriority] = useState("Low");
   const [selectedTaskIdToEdit, setSelectedTaskIdToEdit] = useState(null);
@@ -14,10 +19,8 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
     setPriority(e.target.value);
   };
 
-  useEffect(() => {
-    console.log(taskDetails);
-  }, [taskDetails]);
   const handleUpdateTaskDetails = async (action, taskId) => {
+    debugger;
     const task = doc(db, "Tasks", taskId);
     let updatedTask = [];
 
@@ -65,76 +68,71 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
   };
 
   return (
-    <Table striped bordered hover style={{ marginTop: "20px" }}>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th style={{ width: "80%" }}>Task Name</th>
-          <th>Priority</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {taskDetails.map((task) => {
-          return (
-            <tr key={task.id}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() =>
-                    handleUpdateTaskDetails("updateTaskStatus", task.id)
-                  }
-                  disabled={selectedTaskIdToEdit === task.id}
-                />
-              </td>
-              <td>
-                {selectedTaskIdToEdit === task.id ? (
-                  <input
-                    type="text"
-                    defaultValue={task.task_name}
-                    ref={taskNameRef}
-                    style={{ width: "100%" }}
-                  />
-                ) : (
-                  <label
-                    style={{
-                      textDecoration: task.completed ? "line-through" : "none",
-                    }}
-                  >
-                    {task.task_name}
-                  </label>
-                )}
-              </td>
-              <td align="center">
-                {selectedTaskIdToEdit === task.id ? (
-                  <select value={priority} onChange={updateTaskPriority}>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
-                ) : (
-                  task.priority
-                )}
-              </td>
-              <td align="center">
-                {selectedTaskIdToEdit === task.id ? (
-                  <BiCheck
-                    onClick={() =>
-                      handleUpdateTaskDetails("updateTaskDetails", task.id)
-                    }
-                  />
-                ) : (
-                  <>
-                    <BiEdit onClick={() => setSelectedTaskIdToEdit(task.id)} />
-                    <MdDeleteOutline onClick={() => deleteTask(task.id)} />
-                  </>
-                )}
-              </td>
+    <>
+      {!taskDetails.length ? (
+        <EmptyList />
+      ) : (
+        <Table striped bordered hover responsive="sm" style={{ margin: "20px 0 0 0" }}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th style={{ width: "80%" }}>Task Name</th>
+              <th>Priority</th>
+              <th>Actions</th>
             </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+          </thead>
+          <tbody>
+            {taskDetails.map((task) => {
+              return (
+                <tr key={task.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => handleUpdateTaskDetails("updateTaskStatus", task.id)}
+                      disabled={selectedTaskIdToEdit === task.id}
+                    />
+                  </td>
+                  <td>
+                    {selectedTaskIdToEdit === task.id ? (
+                      <input type="text" defaultValue={task.task_name} ref={taskNameRef} style={{ width: "100%" }} />
+                    ) : (
+                      <label
+                        style={{
+                          textDecoration: task.completed ? "line-through" : "none",
+                        }}
+                      >
+                        {task.task_name}
+                      </label>
+                    )}
+                  </td>
+                  <td align="center">
+                    {selectedTaskIdToEdit === task.id ? (
+                      <select value={priority} onChange={updateTaskPriority}>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                      </select>
+                    ) : (
+                      task.priority
+                    )}
+                  </td>
+                  <td align="center">
+                    {selectedTaskIdToEdit === task.id ? (
+                      <BiCheck onClick={() => handleUpdateTaskDetails("updateTaskDetails", task.id)} />
+                    ) : (
+                      <div style={task.completed ? disableCtrlStyle : {}}>
+                        <BiEdit onClick={() => setSelectedTaskIdToEdit(task.id)} />
+                        <MdDeleteOutline onClick={() => deleteTask(task.id)} />
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      )}
+    </>
   );
 };

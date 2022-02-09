@@ -1,0 +1,49 @@
+.Container {
+  border: 1px solid blue;
+  width: 50%;
+  margin: 5% auto;
+  padding: 20px;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.TaskList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #ececec;
+}
+
+.empty-list {
+  background-color: grey;
+  text-align: center;
+  img {
+    position: relative;
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .Header {
+    Button {
+      width: 100%;
+    }
+  }
+
+  .TaskList {
+    .Priority {
+      flex-direction: column;
+    }
+  }
+}

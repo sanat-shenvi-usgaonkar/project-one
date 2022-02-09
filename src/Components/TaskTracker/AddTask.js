@@ -1,12 +1,6 @@
 import React, { useState, useRef } from "react";
-import { db } from "../../Config/firebase-config";
-import {
-  Form,
-  Button,
-  ButtonGroup,
-  ToggleButton,
-  Feedback,
-} from "react-bootstrap";
+import { Form, Button, ButtonGroup, ToggleButton } from "react-bootstrap";
+import "../../Pages/TaskTracker/TaskTracker.scss";
 
 const priorities = [
   {
@@ -28,41 +22,33 @@ const priorities = [
 
 export const AddTask = ({ handleAddTask }) => {
   const taskNameRef = useRef(null);
-  const [priority, setPriority] = useState({
-    name: "High",
-    value: 1,
-    variant: "outline-danger",
-  });
+  const [priority, setPriority] = useState(priorities[0]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    debugger;
+
     handleAddTask(taskNameRef, priority);
+    setPriority(priorities[0]);
+    taskNameRef.current.value = "";
   };
 
-  const formStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-    margin: "20px 0",
-    padding: "20px",
-    backgroundColor: "#ececec",
-  };
+  // const formStyle = {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   gap: "20px",
+  //   margin: "20px 0",
+  //   padding: "20px",
+  //   backgroundColor: "#ececec",
+  // };
 
   return (
-    <Form onSubmit={handleSubmit} style={formStyle}>
+    <Form onSubmit={handleSubmit} className="TaskList">
       <Form.Group>
-        <Form.Control
-          type="text"
-          placeholder="Task Name"
-          ref={taskNameRef}
-          maxLength={50}
-          required
-        />
-        <Form.Control.Feedback type="invalid">
-          Please enter task name.
-        </Form.Control.Feedback>
+        <Form.Control type="text" placeholder="Task Name" ref={taskNameRef} maxLength={50} required />
+        <Form.Control.Feedback type="invalid">Please enter task name.</Form.Control.Feedback>
       </Form.Group>
-      <ButtonGroup>
+      <ButtonGroup className="Priority">
         {priorities.map((prty, index) => (
           <ToggleButton
             key={index}
