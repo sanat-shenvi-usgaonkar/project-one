@@ -2,16 +2,18 @@ import React, { useState, useRef, useEffect } from "react";
 import { db } from "../../Config/firebase-config";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { Table } from "react-bootstrap";
+
+import { TiDelete } from "react-icons/ti";
 import { BiEdit, BiCheck } from "react-icons/bi";
-import { MdDeleteOutline } from "react-icons/md";
-import { EmptyList } from "./EmptyList";
+import { Loader, EmptyList } from "../../Components";
 
 const disableCtrlStyle = {
   opacity: "0.5",
   pointerEvents: "none",
 };
-export const TaskList = ({ taskDetails, handleTaskDetails }) => {
-  const [priority, setPriority] = useState("Low");
+
+export const TaskList = ({ taskDetails, handleTaskDetails, isLoading }) => {
+  const [priority, setPriority] = useState("High");
   const [selectedTaskIdToEdit, setSelectedTaskIdToEdit] = useState(null);
   const taskNameRef = useRef(null);
 
@@ -20,7 +22,6 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
   };
 
   const handleUpdateTaskDetails = async (action, taskId) => {
-    debugger;
     const task = doc(db, "Tasks", taskId);
     let updatedTask = [];
 
@@ -69,7 +70,9 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
 
   return (
     <>
-      {!taskDetails.length ? (
+      {isLoading ? (
+        <Loader />
+      ) : !taskDetails.length ? (
         <EmptyList />
       ) : (
         <Table striped bordered hover responsive="sm" style={{ margin: "20px 0 0 0" }}>
@@ -108,7 +111,7 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
                   </td>
                   <td align="center">
                     {selectedTaskIdToEdit === task.id ? (
-                      <select value={priority} onChange={updateTaskPriority}>
+                      <select defaultValue="High" onChange={updateTaskPriority}>
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
@@ -123,7 +126,7 @@ export const TaskList = ({ taskDetails, handleTaskDetails }) => {
                     ) : (
                       <div style={task.completed ? disableCtrlStyle : {}}>
                         <BiEdit onClick={() => setSelectedTaskIdToEdit(task.id)} />
-                        <MdDeleteOutline onClick={() => deleteTask(task.id)} />
+                        <TiDelete onClick={() => deleteTask(task.id)} />
                       </div>
                     )}
                   </td>

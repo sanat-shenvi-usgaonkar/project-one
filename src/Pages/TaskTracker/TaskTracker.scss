@@ -1,14 +1,21 @@
 .Container {
-  border: 1px solid blue;
+  border-radius: 15px;
   width: 50%;
   margin: 5% auto;
   padding: 20px;
+  background: white;
 }
 
 .Header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
 }
 
 .TaskList {
@@ -21,7 +28,6 @@
 }
 
 .empty-list {
-  background-color: grey;
   text-align: center;
   img {
     position: relative;
@@ -29,13 +35,22 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 992px) {
   .Header {
     flex-direction: column;
     text-align: center;
-  }
-
-  .Header {
+    gap: 20px;
+    & > div {
+      flex-direction: column;
+      width: 100%;
+      & > div {
+        width: 100%;
+        input {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
     Button {
       width: 100%;
     }

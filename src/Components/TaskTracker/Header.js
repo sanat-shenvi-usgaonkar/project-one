@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../Pages/TaskTracker/TaskTracker.scss";
 
-export const Header = ({ handleShowAddTask }) => {
+export const Header = ({ handleShowAddTask, startDate, handleDateFilter }) => {
   return (
     <div className="Header">
       <h3>Task Manager</h3>
-      <Button variant="success" onClick={handleShowAddTask}>
-        Add
-      </Button>
+      <div>
+        <DatePicker selected={startDate} onChange={(date) => handleDateFilter(date)} showMonthYearDropdown />
+        <Button variant="success" onClick={handleShowAddTask}>
+          Add
+        </Button>
+      </div>
     </div>
   );
 };
