@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, ButtonGroup, ToggleButton } from "react-bootstrap";
 import "../../Pages/TaskTracker/TaskTracker.scss";
+import utils from "../../utility/utils";
 
 const priorities = [
   {
@@ -26,26 +27,22 @@ export const AddTask = ({ handleAddTask }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    debugger;
-
+    if (!utils.isFormValid) {
+      return false;
+    }
     handleAddTask(taskNameRef, priority);
     setPriority(priorities[0]);
     taskNameRef.current.value = "";
   };
 
-  // const formStyle = {
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   gap: "20px",
-  //   margin: "20px 0",
-  //   padding: "20px",
-  //   backgroundColor: "#ececec",
-  // };
+  const handleTaskNameChange = () => {
+    utils.validateInputAndAddStyle(taskNameRef);
+  };
 
   return (
     <Form onSubmit={handleSubmit} className="TaskList">
       <Form.Group>
-        <Form.Control type="text" placeholder="Task Name" ref={taskNameRef} maxLength={50} required />
+        <Form.Control type="text" placeholder="Task Name" ref={taskNameRef} required onChange={handleTaskNameChange} />
         <Form.Control.Feedback type="invalid">Please enter task name.</Form.Control.Feedback>
       </Form.Group>
       <ButtonGroup className="Priority">

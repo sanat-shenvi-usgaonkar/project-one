@@ -16,6 +16,10 @@
     align-items: center;
     gap: 15px;
   }
+
+  input {
+    text-align: center;
+  }
 }
 
 .TaskList {
@@ -47,7 +51,6 @@
         width: 100%;
         input {
           width: 100%;
-          text-align: center;
         }
       }
     }

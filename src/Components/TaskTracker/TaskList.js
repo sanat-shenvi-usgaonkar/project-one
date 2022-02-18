@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { db } from "../../Config/firebase-config";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { Table } from "react-bootstrap";
@@ -6,6 +6,7 @@ import { Table } from "react-bootstrap";
 import { TiDelete } from "react-icons/ti";
 import { BiEdit, BiCheck } from "react-icons/bi";
 import { Loader, EmptyList } from "../../Components";
+import utils from "../../utility/utils";
 
 const disableCtrlStyle = {
   opacity: "0.5",
@@ -21,7 +22,15 @@ export const TaskList = ({ taskDetails, handleTaskDetails, isLoading }) => {
     setPriority(e.target.value);
   };
 
+  const handleTaskNameChange = () => {
+    utils.validateInputAndAddStyle(taskNameRef);
+  };
+
   const handleUpdateTaskDetails = async (action, taskId) => {
+    if (!utils.isFormValid) {
+      return false;
+    }
+
     const task = doc(db, "Tasks", taskId);
     let updatedTask = [];
 
@@ -48,6 +57,9 @@ export const TaskList = ({ taskDetails, handleTaskDetails, isLoading }) => {
               }
             : task
         );
+        break;
+      
+      default:
         break;
     }
 
@@ -98,7 +110,13 @@ export const TaskList = ({ taskDetails, handleTaskDetails, isLoading }) => {
                   </td>
                   <td>
                     {selectedTaskIdToEdit === task.id ? (
-                      <input type="text" defaultValue={task.task_name} ref={taskNameRef} style={{ width: "100%" }} />
+                      <input
+                        type="text"
+                        defaultValue={task.task_name}
+                        ref={taskNameRef}
+                        style={{ width: "100%" }}
+                        onChange={handleTaskNameChange}
+                      />
                     ) : (
                       <label
                         style={{
@@ -111,7 +129,7 @@ export const TaskList = ({ taskDetails, handleTaskDetails, isLoading }) => {
                   </td>
                   <td align="center">
                     {selectedTaskIdToEdit === task.id ? (
-                      <select defaultValue="High" onChange={updateTaskPriority}>
+                      <select defaultValue={task.priority} onChange={updateTaskPriority}>
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
